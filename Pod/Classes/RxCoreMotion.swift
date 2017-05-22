@@ -53,8 +53,10 @@ extension Reactive where Base: CMMotionManager {
         return memoize(key: &rotationKey) {
             Observable.create { observer in
                 let motionManager = self.base
+                let operationQueue = OperationQueue()
+                operationQueue.maxConcurrentOperationCount = 1
                 
-                motionManager.startGyroUpdates(to: OperationQueue(), withHandler: { (data: CMGyroData?, error: Error?) -> Void in
+                motionManager.startGyroUpdates(to: operationQueue, withHandler: { (data: CMGyroData?, error: Error?) -> Void in
                     guard let data = data else {
                         return
                     }
